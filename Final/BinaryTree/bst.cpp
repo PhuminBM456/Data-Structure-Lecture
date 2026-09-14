@@ -180,6 +180,30 @@ class Tree{
             // recursion
             return findMin(curr->left);
         }
+
+        Node* delNode(Node* root,int tar){
+            if(root == nullptr)
+                return nullptr;
+
+            if(tar < root->data){
+                root->left = delNode(root->left,tar);
+            }else if(tar > root->data){
+                root->right = delNode(root->right,tar);
+            }else{
+                if(root->left == nullptr && root->right == nullptr){ // case 1
+                    return nullptr;
+                }else if(root->left == nullptr && root->right != nullptr){ // case 2
+                    return root->right;
+                }else if(root->left != nullptr && root->right == nullptr){ // case 3
+                    return root->left;
+                }else{ // case 4
+                    Node* temp = findMin(root->right);
+
+                    root->data = temp->data;
+                    root->right = delNode(root->right,temp->data);
+                }
+            }
+        }
 };
 
 int main(){
@@ -218,7 +242,14 @@ int main(){
     cout << '\n';
     cout << "Height : " << bst.height(bst.root) << '\n';
     cout << "Adge : " << bst.height(bst.root) - 1 << '\n';
-    cout << "Min is " << temp->data << '\n';
+    cout << "Min is " << temp->data << '\n' << '\n';
+    cout << "Delete 15\n";
+    bst.delNode(bst.root,15);
+    bst.BFS(bst.root);
+    cout << '\n' << '\n';
+    cout << "Delete 5\n";
+    bst.delNode(bst.root,5);
+    bst.BFS(bst.root);
 
     return 0;
 }
