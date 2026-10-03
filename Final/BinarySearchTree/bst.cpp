@@ -1,4 +1,5 @@
 #include<bits/stdc++.h>
+#define CAP 100
 #define sp ' '
 using namespace std;
 
@@ -11,6 +12,51 @@ class Node{
         Node(int data){
             this->data = data;
             left = right = nullptr;
+        }
+};
+
+class Queue{
+    public:
+        Node* arr[CAP];
+        int front,rear;
+
+        Queue(){
+            front = rear = -1;
+        }
+
+        bool isFull(){
+            return (rear+1) % CAP == front;
+        }
+
+        bool isEmpty(){
+            return front == -1;
+        }
+
+        void enqueue(Node* node){
+            if(isFull())
+                return;
+
+            if(front == -1)
+                front = 0;
+
+            rear = (rear+1) % CAP;
+            arr[rear] = node;
+        }
+
+        Node* dequeue(){
+            if(isEmpty())
+                return nullptr;
+
+            Node* temp = arr[front];
+
+            if(front == rear){
+                front = rear = -1;
+                return temp;
+            }
+
+            front = (front+1) % CAP;
+
+            return temp;
         }
 };
 
@@ -29,6 +75,13 @@ class BST{
 
             // recursion
             return findMin(temp->left);
+        }
+
+        int height(Node* root){
+            if(root == nullptr)
+                return 0;
+
+            return max(height(root->left),height(root->right)) + 1;
         }
 
         void insert(int data){
@@ -100,6 +153,28 @@ class BST{
             preorder(root->left);
             inorder(root->right);
             cout << root->data << sp;
+        }
+
+        void BFS(Node* root){
+            Queue queue;
+
+            queue.enqueue(root);
+            
+            cout << root->data << sp;
+
+            while(!queue.isEmpty()){
+                Node* temp = queue.dequeue();
+
+                if(temp->left != nullptr){
+                    queue.enqueue(temp->left);
+                    cout << temp->left->data << sp;
+                }
+
+                if(temp->right != nullptr){
+                    queue.enqueue(temp->right);
+                    cout << temp->right->data << sp;
+                }
+            }
         }
 };
 
