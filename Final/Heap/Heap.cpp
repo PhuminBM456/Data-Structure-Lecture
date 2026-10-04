@@ -1,41 +1,34 @@
-#include<iostream>
-#include<vector>
+#include<bits/stdc++.h>
 using namespace std;
 
 class Heap{
     public:
-    	vector<int> heap;
-    	
-        void insert(int data){
-            heap.push_back(data);
-            heapifyUp();
+        vector<int> arr;
+
+        Heap(int size){
+            arr.resize(size);
         }
 
-        void del(){
-            if(heap.size() == 0){
-                cout << "Heap is empty\n";
-                return;
-            }
-
-            cout << heap[0] << ' ';
-
-            heap[0] = heap.back();
-            heap.pop_back();
-
-            heapifyDown();
+        void insert(int data){
+            arr.push_back(data);
         }
 
         void heapifyUp(){
-            int i = heap.size()-1;
+            int i,parent;
 
-            while(i > 0){
-                int parent = (i-1) / 2;
+            i = arr.size() - 1;
+            
+            while(true){
+                if(i == 0)
+                    break;
 
-                if(heap[parent] < heap[i]){
-                //if(heap[parent] > heap[i]){
-                    int temp = heap[parent];
-                    heap[parent] = heap[i];
-                    heap[i] = temp;
+                parent = (i-1) / 2;
+
+                if(arr[parent] < arr[i]){
+                    int temp = arr[parent];
+
+                    arr[parent] = arr[i];
+                    arr[i] = temp;
                 }else{
                     break;
                 }
@@ -45,60 +38,29 @@ class Heap{
         }
 
         void heapifyDown(){
-            int i = 0;
+            int i;
 
             while(true){
-                int left = 2 * i + 1;
-                int right = 2 * i + 2;
                 int largest = i;
+                int left = i*2 + 1;
+                int right = i*2 + 1;
 
-                if(left < heap.size() && heap[left] > heap[largest]){
+                if(left < arr.size() && arr[largest] < arr[left])
                     largest = left;
-                }
 
-                if(right < heap.size() && heap[right] > heap[largest]){
+                if(right < arr.size() && arr[largest] < arr[right])
                     largest = right;
-                }
 
-                // if(left < heap.size() && heap[left] < heap[largest]){
-                //     largest = left;
-                // }
-
-                // if(right < heap.size() && heap[right] < heap[largest]){
-                //     largest = right;
-                // }
-
-                if(largest == i){
+                if(i == largest)
                     break;
-                }
 
-                int temp = heap[i];
-                heap[i] = heap[largest];
-                heap[largest] = temp;
+                swap(arr[i],arr[largest]);
 
                 i = largest;
-            }
-        }
-
-        void display(){
-            for(int i=0;i<heap.size();i++){
-                cout << "index = " << i << " value = " << heap[i] << endl;
             }
         }
 };
 
 int main(){
-    Heap heap;
-
-    heap.insert(-1);
-    heap.insert(2);
-    heap.insert(100);
-    heap.insert(5);
-
-    heap.del();
-    heap.del();
-    heap.del();
-    heap.del();
-    
     return 0;
 }

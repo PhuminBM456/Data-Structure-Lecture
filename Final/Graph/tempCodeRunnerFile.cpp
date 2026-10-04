@@ -1,1 +1,0 @@
-graph.insertVertex(0,1);
