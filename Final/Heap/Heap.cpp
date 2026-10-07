@@ -11,6 +11,7 @@ class Heap{
 
         void insert(int data){
             arr.push_back(data);
+            heapifyUp();
         }
 
         void heapifyUp(){
