@@ -38,12 +38,13 @@ class Heap{
         }
 
         void heapifyDown(){
-            int i;
+            int i,largest;
+
+            i = largest = 0;
 
             while(true){
-                int largest = i;
                 int left = i*2 + 1;
-                int right = i*2 + 1;
+                int right = i*2 + 2;
 
                 if(left < arr.size() && arr[largest] < arr[left])
                     largest = left;
