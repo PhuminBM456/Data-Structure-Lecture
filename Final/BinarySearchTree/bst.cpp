@@ -1,6 +1,4 @@
 #include<bits/stdc++.h>
-#define CAP 100
-#define sp ' '
 using namespace std;
 
 class Node{
@@ -15,51 +13,6 @@ class Node{
         }
 };
 
-class Queue{
-    public:
-        Node* arr[CAP];
-        int front,rear;
-
-        Queue(){
-            front = rear = -1;
-        }
-
-        bool isFull(){
-            return (rear+1) % CAP == front;
-        }
-
-        bool isEmpty(){
-            return front == -1;
-        }
-
-        void enqueue(Node* node){
-            if(isFull())
-                return;
-
-            if(front == -1)
-                front = 0;
-
-            rear = (rear+1) % CAP;
-            arr[rear] = node;
-        }
-
-        Node* dequeue(){
-            if(isEmpty())
-                return nullptr;
-
-            Node* temp = arr[front];
-
-            if(front == rear){
-                front = rear = -1;
-                return temp;
-            }
-
-            front = (front+1) % CAP;
-
-            return temp;
-        }
-};
-
 class BST{
     public:
         Node* root;
@@ -68,113 +21,102 @@ class BST{
             root = nullptr;
         }
 
-        Node* findMin(Node* temp){
+        Node* findMin(Node* root){
             // basecase
-            if(temp->left == nullptr)
-                return temp;
+            if(root->left == nullptr)
+                return root;
 
             // recursion
-            return findMin(temp->left);
+            return findMin(root->left);
         }
 
-        int height(Node* root){
-            if(root == nullptr)
-                return 0;
+        void Insert(Node* root,int data){
+            if(root == nullptr){
+                root = new Node(data);
+                return;
+            }
 
-            return max(height(root->left),height(root->right)) + 1;
-        }
+            while(1){
+                if(data < root->data && root->left != nullptr){
+                    root = root->left;
+                }else if(data > root->data && root->right != nullptr){
+                    root = root->right;
+                }
 
-        void insert(int data){
-            Node* temp = root;
-
-            while(true){
-                if(data < temp->data && temp->left != nullptr){
-                    temp = temp->left;
-                }else if(data > temp->data && temp->right != nullptr){
-                    temp = temp->right;
-                }else if(data < temp->data && temp->left == nullptr){
-                    temp->left = new Node(data);
+                else if(data < root->data && root->left == nullptr){
+                    root->left = new Node(data);
                     break;
-                }else if(data > temp->data && temp->right == nullptr){
-                    temp->right = new Node(data);
+                }else if(data > root->data && root->right == nullptr){
+                    root->right = new Node(data);
                     break;
-                }else{
+                }
+
+                else{
                     break;
                 }
             }
+            
         }
 
-        Node* delNode(Node* root,int data){
-            if(root == nullptr) // not found
+        Node* Delete(Node* root,int tar){
+            if(root == nullptr)
                 return nullptr;
 
-            if(data < root->data){
-                root->left = delNode(root->left,data);
-            }else if(data > root->data){
-                root->right = delNode(root->right,data);
-            }else{
+            if(tar < root->data){
+                root->left = Delete(root->left,tar);
+            }else if(tar > root->data){
+                root->right = Delete(root->right,tar);
+            }
+
+            else{
                 if(root->left == nullptr && root->right == nullptr){
                     return nullptr;
                 }else if(root->left != nullptr && root->right == nullptr){
                     return root->left;
                 }else if(root->left == nullptr && root->right != nullptr){
                     return root->right;
-                }else{
-                    Node* node = findMin(root->right);
-                    
-                    root->data = node->data;
-                    root->right = delNode(root->right,root->data);
+                }
+
+                else{
+                    int min = findMin(root->right);
+
+                    root->data = min;
+                    root->right = Delete(root->right,min);
                 }
             }
         }
 
-        void preorder(Node* root){
+        Node* Preorder(Node* root){
             // basecase
-            if(root == nullptr) return;
+            if(root == nullptr)
+                return nullptr;
 
-            cout << root->data << sp;
-            preorder(root->left);
-            inorder(root->right);
+            // recursion
+            cout << root << data << ' ';
+            Preorder(root->left);
+            Preorder(root->right);
         }
 
-        void inorder(Node* root){
+        Node* Inorder(Node* root){
             // basecase
-            if(root == nullptr) return;
+            if(root == nullptr)
+                return nullptr;
 
-            preorder(root->left);
-            cout << root->data << sp;
-            inorder(root->right);
+            // recursion
+            Inorder(root->left);
+            cout << root << data << ' ';
+            Inorder(root->right);
         }
 
-        void postorder(Node* root){
+        Node* Postorder(Node* root){
             // basecase
-            if(root == nullptr) return;
+            if(root == nullptr)
+                return nullptr;
 
-            preorder(root->left);
-            inorder(root->right);
-            cout << root->data << sp;
-        }
-
-        void BFS(Node* root){
-            Queue queue;
-
-            queue.enqueue(root);
-            
-            cout << root->data << sp;
-
-            while(!queue.isEmpty()){
-                Node* temp = queue.dequeue();
-
-                if(temp->left != nullptr){
-                    queue.enqueue(temp->left);
-                    cout << temp->left->data << sp;
-                }
-
-                if(temp->right != nullptr){
-                    queue.enqueue(temp->right);
-                    cout << temp->right->data << sp;
-                }
-            }
+            // recursion
+            Postorder(root->left);
+            cout << root << data << ' ';
+            Postorder(root->right);
         }
 };
 
